@@ -1,4 +1,8 @@
 ﻿using Business.Interfaces;
+using Infrastructure.Contexts;
+using Infrastructure.Interfaces;
+using Infrastructure.UnitOfWorks;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,44 +14,60 @@ namespace Business.Repositories
 {
     public class BaseService<T> : IBaseService<T> where T : class
     {
-        public Task AddAsync(T entity)
+     private readonly IBaseRepository<T> _repository;   
+        private readonly IUnitOfWork    _unitOfWork;
+
+        public BaseService(IUnitOfWork unitOfWork, IBaseRepository<T> repository)
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+            _repository = repository;
         }
 
-        public Task AddRangeAsync(IEnumerable<T> entities)
+        public async Task<T> AddAsync(T entity)
         {
-            throw new NotImplementedException();
+           await _repository.AddAsync(entity);
+           await _unitOfWork.CommitAsync();
+            return entity;
         }
 
-        public IQueryable<T> GetAll()
+        public async Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            await _repository.AddRangeAsync(entities);
+            await _unitOfWork.CommitAsync();
+            return entities;
         }
 
-        public Task<T> GetByIdAsync(int id)
+        public  async Task<IEnumerable<T>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _repository.GetAll().ToListAsync();
+        }
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+           return await _repository.GetByIdAsync(id);
         }
 
         public void Remove(T entity)
         {
-            throw new NotImplementedException();
+            _repository.Remove(entity);
+            _unitOfWork.Commit();
         }
 
         public void RemoveRange(IEnumerable<T> entities)
         {
-            throw new NotImplementedException();
+            _repository.RemoveRange(entities);
+            _unitOfWork.Commit();   
         }
 
         public void Update(T entity)
         {
-            throw new NotImplementedException();
+            _repository.Update(entity); 
+            _unitOfWork.Commit();
         }
 
         public IQueryable<T> Where(Expression<Func<T, bool>> expression)
         {
-            throw new NotImplementedException();
+            return _repository.Where(expression);
         }
     }
 
