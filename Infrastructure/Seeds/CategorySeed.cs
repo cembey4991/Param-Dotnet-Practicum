@@ -17,7 +17,7 @@ namespace Infrastructure.Seeds
                 new Category
                 {
                     Id= 1,
-                    Name="Categpry 1"
+                    Name="Category 1"
                 }
                 );
         }

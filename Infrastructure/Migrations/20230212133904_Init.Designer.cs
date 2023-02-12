@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230209133707_Init")]
+    [Migration("20230212133904_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -27,16 +27,17 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Entity.Entities.Category", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -50,28 +51,29 @@ namespace Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Categpry 1"
+                            Name = "Category 1"
                         });
                 });
 
             modelBuilder.Entity("Entity.Entities.Product", b =>
                 {
-                    b.Property<int?>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Price")
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -88,7 +90,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            CreatedDate = new DateTime(2023, 2, 9, 16, 37, 7, 538, DateTimeKind.Local).AddTicks(9210),
+                            CreatedDate = new DateTime(2023, 2, 12, 16, 39, 4, 484, DateTimeKind.Local).AddTicks(2331),
                             Name = "Prdouct 1",
                             Price = 500
                         },
@@ -96,7 +98,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = 2,
                             CategoryId = 1,
-                            CreatedDate = new DateTime(2023, 2, 9, 16, 37, 7, 538, DateTimeKind.Local).AddTicks(9222),
+                            CreatedDate = new DateTime(2023, 2, 12, 16, 39, 4, 484, DateTimeKind.Local).AddTicks(2350),
                             Name = "Prdouct 2",
                             Price = 500
                         },
@@ -104,7 +106,7 @@ namespace Infrastructure.Migrations
                         {
                             Id = 3,
                             CategoryId = 1,
-                            CreatedDate = new DateTime(2023, 2, 9, 16, 37, 7, 538, DateTimeKind.Local).AddTicks(9223),
+                            CreatedDate = new DateTime(2023, 2, 12, 16, 39, 4, 484, DateTimeKind.Local).AddTicks(2351),
                             Name = "Prdouct 3",
                             Price = 500
                         });
@@ -114,7 +116,9 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Entity.Entities.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
                 });

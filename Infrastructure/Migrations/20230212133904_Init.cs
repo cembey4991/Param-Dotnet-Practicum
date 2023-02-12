@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -34,9 +34,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Price = table.Column<int>(type: "int", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -47,22 +47,23 @@ namespace Infrastructure.Migrations
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "CreatedDate", "Name", "UpdatedDate" },
-                values: new object[] { 1, null, "Categpry 1", null });
+                values: new object[] { 1, null, "Category 1", null });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "CategoryId", "CreatedDate", "Name", "Price", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2023, 2, 9, 16, 37, 7, 538, DateTimeKind.Local).AddTicks(9210), "Prdouct 1", 500, null },
-                    { 2, 1, new DateTime(2023, 2, 9, 16, 37, 7, 538, DateTimeKind.Local).AddTicks(9222), "Prdouct 2", 500, null },
-                    { 3, 1, new DateTime(2023, 2, 9, 16, 37, 7, 538, DateTimeKind.Local).AddTicks(9223), "Prdouct 3", 500, null }
+                    { 1, 1, new DateTime(2023, 2, 12, 16, 39, 4, 484, DateTimeKind.Local).AddTicks(2331), "Prdouct 1", 500, null },
+                    { 2, 1, new DateTime(2023, 2, 12, 16, 39, 4, 484, DateTimeKind.Local).AddTicks(2350), "Prdouct 2", 500, null },
+                    { 3, 1, new DateTime(2023, 2, 12, 16, 39, 4, 484, DateTimeKind.Local).AddTicks(2351), "Prdouct 3", 500, null }
                 });
 
             migrationBuilder.CreateIndex(
