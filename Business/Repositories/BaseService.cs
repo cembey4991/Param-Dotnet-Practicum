@@ -42,13 +42,18 @@ namespace Business.Repositories
         {
             return await _repository.GetAll().ToListAsync();
         }
-
+        /// <summary>
+        /// Data for id not found
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="NotFoundException"></exception>
         public async Task<T> GetByIdAsync(int id)
         {
            var hasProduct= await _repository.GetByIdAsync(id);
             if (hasProduct==null)
             {
-                throw new ClientSideException($"{typeof(T).Name} not found");
+                throw new NotFoundException($"{typeof(T).Name} not found");
             }
             return hasProduct;
         }
