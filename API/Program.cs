@@ -1,3 +1,4 @@
+using API.Middlewares;
 using Business.Interfaces;
 using Business.Mapping;
 using Business.Repositories;
@@ -8,12 +9,23 @@ using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.UnitOfWorks;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+//Validator
 builder.Services.AddControllers().AddFluentValidation(c=>c.RegisterValidatorsFromAssemblyContaining<ProductDtoValidator>());
+
+//Serilog
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -42,8 +54,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
+//Global Exception Handler
+app.UseCustomException();
 
 app.UseAuthorization();
 

@@ -1,4 +1,5 @@
-﻿using Business.Interfaces;
+﻿using Business.Exceptions;
+using Business.Interfaces;
 using Infrastructure.Contexts;
 using Infrastructure.Interfaces;
 using Infrastructure.UnitOfWorks;
@@ -44,7 +45,12 @@ namespace Business.Repositories
 
         public async Task<T> GetByIdAsync(int id)
         {
-           return await _repository.GetByIdAsync(id);
+           var hasProduct= await _repository.GetByIdAsync(id);
+            if (hasProduct==null)
+            {
+                throw new ClientSideException($"{typeof(T).Name} not found");
+            }
+            return hasProduct;
         }
 
         public void Remove(T entity)

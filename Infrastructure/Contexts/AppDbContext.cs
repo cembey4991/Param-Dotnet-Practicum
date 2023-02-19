@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Contexts
 {
+    /// <summary>
+    /// Connection
+    /// </summary>
     public class AppDbContext:DbContext
     {
        

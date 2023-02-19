@@ -13,11 +13,13 @@ namespace API.Controllers
     {
         private readonly IProductService _productService;
         private readonly IMapper _mapper;
+        private readonly ILogger<ProductController> _logger;
 
-        public ProductController(IProductService productService, IMapper mapper)
+        public ProductController(IProductService productService, IMapper mapper, ILogger<ProductController> logger)
         {
             _productService = productService;
             _mapper = mapper;
+            _logger = logger;
         }
         /// <summary>
         ///  All Products api/Product/GetAllProducts
@@ -26,6 +28,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
+            //log
+            _logger.LogInformation("Products listed");
+
+
            var products=await _productService.GetAllAsync();
             var productsDtos=_mapper.Map<List<ProductDto>>(products);
             return Ok(productsDtos);
@@ -38,6 +44,9 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdProduct(int id)
         {
+            //log
+            _logger.LogInformation("Product information");
+
             var product = await _productService.GetByIdAsync(id);
             var productDtos = _mapper.Map<ProductDto>(product);
             return Ok(productDtos);
@@ -51,6 +60,9 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProduct(ProductDto dto)
         {
+            //log
+            _logger.LogInformation("Add Product");
+
             var addProduct = await _productService.AddAsync(_mapper.Map<Product>(dto));
             var productDto= _mapper.Map<ProductDto>(addProduct);
             return Created("", new ProductDto { Name=dto.Name,Price=dto.Price,CreatedDate=dto.CreatedDate,CategoryId=dto.CategoryId});
@@ -65,6 +77,9 @@ namespace API.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateProduct(ProductDto dto)
         {
+            //log
+            _logger.LogInformation("Update product"); 
+
             _productService.Update(_mapper.Map<Product>(dto));
             return Ok();
 
@@ -77,6 +92,9 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
+            //log
+            _logger.LogInformation("Delete Product"); 
+
             var product = await _productService.GetByIdAsync(id);
             if (product==null)
             {
