@@ -2,11 +2,13 @@
 using Business.Interfaces;
 using Entity.DTOs;
 using Entity.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class ProductController : ControllerBase
